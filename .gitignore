@@ -1,0 +1,7 @@
+website/backend/venv/
+website/backend/__pycache__/
+*.pyc
+website/frontend/node_modules/
+.DS_Store
+venv-honeypot
+venv-shadowtrap

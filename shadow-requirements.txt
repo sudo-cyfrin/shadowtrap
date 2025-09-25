@@ -6,3 +6,5 @@ colorlog
 netaddr
 pygeoip
 psutil
+flask_cors
+flask_sqlalchemy
