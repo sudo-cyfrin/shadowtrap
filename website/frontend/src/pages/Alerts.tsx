@@ -4,8 +4,15 @@ import { Card } from '../components/Card'
 
 type Alert = {
   id: string
-  t: string
-  message: string
+  timestamp: string
+  alert_signature: string
+  src_ip: string
+  dest_ip: string
+  proto: string
+  vector: string
+  geo: string
+  severity: string
+  alert_category: string
 }
 
 export default function Alerts() {
@@ -21,13 +28,7 @@ export default function Alerts() {
         const data = await res.json()
 
         if (!cancelled) {
-          // map backend fields to frontend Alert type
-          const mapped = data.map((a: any) => ({
-            id: String(a.id),
-            t: a.timestamp ? new Date(a.timestamp).toLocaleTimeString() : '',
-            message: a.signature ?? 'No description',
-          }))
-          setAlerts(mapped)
+          setAlerts(data)
           setLoading(false)
         }
       } catch (err) {
@@ -38,7 +39,7 @@ export default function Alerts() {
 
     fetchAlerts()
 
-    // optional: polling every 10s
+    // optional: refresh every 10s
     const interval = setInterval(fetchAlerts, 10000)
     return () => {
       cancelled = true
@@ -51,15 +52,27 @@ export default function Alerts() {
       <Card title="Recent Alerts" icon={<Bell className="h-4 w-4 text-neutral-400" />}>
         {loading ? (
           <div className="text-neutral-400 text-sm">Loading...</div>
+        ) : alerts.length === 0 ? (
+          <div className="text-neutral-400 text-sm">No alerts yet.</div>
         ) : (
           <ul className="space-y-3 text-sm">
             {alerts.map((a) => (
               <li
                 key={a.id}
-                className="flex items-center justify-between border-b border-neutral-800 pb-2"
+                className="border-b border-neutral-800 pb-2 flex flex-col space-y-1"
               >
-                <div className="text-neutral-300">{a.message}</div>
-                <div className="text-neutral-500 text-xs">{a.t}</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-neutral-300 font-medium">{a.alert_signature}</span>
+                  <span className="text-neutral-500 text-xs">
+                    {new Date(a.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div className="text-neutral-500 text-xs">
+                  <strong>Category:</strong> {a.alert_category} |{' '}
+                  <strong>Vector:</strong> {a.vector} |{' '}
+                  <strong>Geo:</strong> {a.geo} |{' '}
+                  <strong>Severity:</strong> {a.severity}
+                </div>
               </li>
             ))}
           </ul>

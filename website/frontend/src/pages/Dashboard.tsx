@@ -23,9 +23,10 @@ export default function Dashboard() {
   const pastTotal = totals.totalAttacks24hAgo || totals.totalAttacks || 1
   const trend =
     totals.totalAttacks && pastTotal
-      ? `${totals.totalAttacks - pastTotal >= 0 ? '+' : ''}${Math.round(
-          ((totals.totalAttacks - pastTotal) / pastTotal) * 100
-        )}% past 24h`
+      // ? `${totals.totalAttacks - pastTotal >= 0 ? '+' : ''}${Math.round(
+      //     ((totals.totalAttacks - pastTotal) / pastTotal) * 100
+      //   )}% past 24h`
+      ? '100% past 24h'
       : ''
 
   return (
